@@ -1,10 +1,11 @@
-package main
+package kpong
 
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-func main() {
+// Start initiates the main game loop
+func Start(kubeconfig string, namespace string) {
 	screenWidth := int32(1024)
 	screenHeight := int32(800)
 
@@ -13,31 +14,55 @@ func main() {
 
 	// startmsg := "Press space to serve"
 
-	player1 := &Paddle{screenHeight, 10, 10, 10, 60}
-	player2 := &Paddle{screenHeight, screenWidth - 20, screenHeight - 70, 10, 60}
+	var kubeErr bool
+	pod1, err := GetRandomPod(kubeconfig, namespace)
+	if err != nil {
+		kubeErr = true
+	}
+	pod2, err := GetRandomPod(kubeconfig, namespace)
+	if err != nil {
+		kubeErr = true
+	}
+
+	player1 := &Player{
+		Paddle: &Paddle{screenHeight, 10, 10, 10, 75},
+		Pod:    pod1,
+	}
+	player2 := &Player{
+		Paddle: &Paddle{screenHeight, screenWidth - 20, screenHeight - 70, 10, 75},
+		Pod:    pod2,
+	}
 	ball := &Ball{
 		0,
 		0,
 		screenWidth / 2,
 		screenHeight / 2,
-		5,
-		5,
+		10,
+		10,
 		false,
+	}
+	if kubeErr {
+		// TODO: use a different ball texture to denote that an error has occurred
 	}
 
 	keybindings := make(map[int]func())
-	keybindings[rl.KeyW] = player1.Up
-	keybindings[rl.KeyS] = player1.Down
+	keybindings[rl.KeyW] = player1.Paddle.Up
+	keybindings[rl.KeyS] = player1.Paddle.Down
 	keybindings[rl.KeySpace] = ball.Serve
 
 	keybindings2 := make(map[int]func())
-	keybindings2[rl.KeyUp] = player2.Up
-	keybindings2[rl.KeyDown] = player2.Down
+	keybindings2[rl.KeyUp] = player2.Paddle.Up
+	keybindings2[rl.KeyDown] = player2.Paddle.Down
 	keybindings2[rl.KeySpace] = ball.Serve
 
 	// Plug in your controller player 1
 	controller1 := &Controller{keybindings}
 	controller2 := &Controller{keybindings2}
+
+	clientset, err := newK8SClient(kubeconfig)
+	if err != nil {
+		kubeErr = true
+	}
 
 	game := Game{
 		Ball:          ball,
@@ -45,6 +70,8 @@ func main() {
 		Player2:       player2,
 		Controller1:   controller1,
 		Controller2:   controller2,
+		KubeClient:    clientset,
+		PodFontSize:   18,
 		ScoreFontSize: 36,
 		ScreenHeight:  screenHeight,
 		ScreenWidth:   screenWidth,
