@@ -94,7 +94,7 @@ func (g *Game) Update() {
 
 		// setup Pod deletion
 		deletePolicy := metav1.DeletePropagationForeground
-		g.KubeClient.CoreV1().Pods("").Delete(g.Player2.Pod.Name, &metav1.DeleteOptions{
+		g.KubeClient.CoreV1().Pods(g.Player2.Pod.Namespace).Delete(g.Player2.Pod.Name, &metav1.DeleteOptions{
 			PropagationPolicy: &deletePolicy,
 		})
 
@@ -114,7 +114,7 @@ func (g *Game) Update() {
 		g.Ball.Served = false
 
 		deletePolicy := metav1.DeletePropagationForeground
-		g.KubeClient.CoreV1().Pods("").Delete(g.Player1.Pod.Name, &metav1.DeleteOptions{
+		g.KubeClient.CoreV1().Pods(g.Player1.Pod.Namespace).Delete(g.Player1.Pod.Name, &metav1.DeleteOptions{
 			PropagationPolicy: &deletePolicy,
 		})
 
