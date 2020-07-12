@@ -25,14 +25,15 @@ func Start(kubeconfig string, namespace string) {
 	}
 
 	player1 := &Player{
-		Paddle: &Paddle{screenHeight, 10, 10, 10, 75},
+		Paddle: &Paddle{rl.RayWhite, screenHeight, 10, 10, 10, 75},
 		Pod:    pod1,
 	}
 	player2 := &Player{
-		Paddle: &Paddle{screenHeight, screenWidth - 20, screenHeight - 70, 10, 75},
+		Paddle: &Paddle{rl.RayWhite, screenHeight, screenWidth - 20, screenHeight - 70, 10, 75},
 		Pod:    pod2,
 	}
 	ball := &Ball{
+		rl.RayWhite,
 		0,
 		0,
 		screenWidth / 2,
@@ -79,7 +80,7 @@ func Start(kubeconfig string, namespace string) {
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
-		rl.ClearBackground(rl.DarkGray)
+		rl.ClearBackground(rl.Black)
 
 		game.Render()
 		game.Update()

@@ -6,6 +6,7 @@ import (
 
 // Paddle represents a pong paddle
 type Paddle struct {
+	Color         rl.Color
 	ScreenHeight  int32
 	X, Y          int32
 	Width, Height int32
@@ -13,7 +14,7 @@ type Paddle struct {
 
 // Render draws the paddle to the screen
 func (p *Paddle) Render() {
-	rl.DrawRectangle(p.X, p.Y, p.Width, p.Height, rl.RayWhite)
+	rl.DrawRectangle(p.X, p.Y, p.Width, p.Height, p.Color)
 }
 
 // If you're looking for update, it doesn't exist because controllers update paddles

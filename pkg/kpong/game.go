@@ -100,7 +100,7 @@ func (g *Game) Update() {
 
 		newPod, err := GetRandomPod("", "")
 		if err != nil {
-			fmt.Println("Uhoh: %s", err)
+			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player2.Pod = newPod
 	}
@@ -120,7 +120,7 @@ func (g *Game) Update() {
 
 		newPod, err := GetRandomPod("", "")
 		if err != nil {
-			fmt.Println("Uhoh: %s", err)
+			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player1.Pod = newPod
 	}

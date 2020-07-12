@@ -8,6 +8,7 @@ import (
 
 // Ball represents the ball object
 type Ball struct {
+	Color         rl.Color
 	DX, DY        int32
 	X, Y          int32
 	Width, Height int32
@@ -22,7 +23,7 @@ func (b *Ball) Update() {
 
 // Render draws the ball to the screen
 func (b *Ball) Render() {
-	rl.DrawRectangle(b.X, b.Y, b.Width, b.Height, rl.RayWhite)
+	rl.DrawRectangle(b.X, b.Y, b.Width, b.Height, b.Color)
 }
 
 // Serve sets the ball in motion
