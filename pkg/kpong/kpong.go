@@ -15,11 +15,17 @@ func Start(kubeconfig string, namespace string) {
 	// startmsg := "Press space to serve"
 
 	var kubeErr bool
-	pod1, err := GetRandomPod(kubeconfig, namespace)
+
+	clientset, err := newK8SClient(kubeconfig)
 	if err != nil {
 		kubeErr = true
 	}
-	pod2, err := GetRandomPod(kubeconfig, namespace)
+
+	pod1, err := GetRandomPod(clientset, namespace)
+	if err != nil {
+		kubeErr = true
+	}
+	pod2, err := GetRandomPod(clientset, namespace)
 	if err != nil {
 		kubeErr = true
 	}
@@ -59,11 +65,6 @@ func Start(kubeconfig string, namespace string) {
 	// Plug in your controller player 1
 	controller1 := &Controller{keybindings}
 	controller2 := &Controller{keybindings2}
-
-	clientset, err := newK8SClient(kubeconfig)
-	if err != nil {
-		kubeErr = true
-	}
 
 	game := Game{
 		Ball:          ball,

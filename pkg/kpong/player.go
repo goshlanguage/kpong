@@ -7,7 +7,7 @@ import (
 // Player models a player
 type Player struct {
 	Paddle *Paddle
-	Pod    v1.Pod
+	Pod    *v1.Pod
 }
 
 // Render calls the player paddle render function to render it to the screen

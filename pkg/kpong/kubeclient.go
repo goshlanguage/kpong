@@ -33,19 +33,28 @@ func newK8SClient(kubeconfig string) (*kubernetes.Clientset, error) {
 
 // GetRandomPod selects a pod from a particular namespace to be on the hook
 // If an empty string is supplied for namespace, all namespaces will be enumerated
-func GetRandomPod(kubeconfig string, namespace string) (v1.Pod, error) {
-	client, err := newK8SClient(kubeconfig)
-	if err != nil {
-		return v1.Pod{}, err
-	}
-
-	pods, err := client.CoreV1().Pods(namespace).List(metav1.ListOptions{})
+func GetRandomPod(clientset *kubernetes.Clientset, namespace string) (*v1.Pod, error) {
+	pods, err := clientset.CoreV1().Pods(namespace).List(metav1.ListOptions{})
 	if err != nil {
 		fmt.Printf("Encountered error when setting up kubernetes clientset: %s\n", err.Error())
-		return v1.Pod{}, err
+		return &v1.Pod{}, err
 	}
 
 	die := rand.Intn(len(pods.Items))
-	randoPod := pods.Items[die]
+	randoPod := &pods.Items[die]
 	return randoPod, nil
+}
+
+// CyclePod is responsible for removing the given pod, and returning a new one
+func CyclePod(clientset *kubernetes.Clientset, pod *v1.Pod) (*v1.Pod, error) {
+	deletePolicy := metav1.DeletePropagationForeground
+	clientset.CoreV1().Pods(pod.Namespace).Delete(pod.Name, &metav1.DeleteOptions{
+		PropagationPolicy: &deletePolicy,
+	})
+
+	newPod, err := GetRandomPod(clientset, "")
+	if err != nil {
+		return &v1.Pod{}, err
+	}
+	return newPod, err
 }

@@ -5,7 +5,6 @@ import (
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -84,6 +83,15 @@ func (g *Game) Update() {
 
 	g.Ball.Update()
 
+	g.CheckBounds()
+	// TODO: The follow collision detection is buggy, and can result in the ball being "stuck" in the paddle
+	// Should probably fix this for playability
+	g.CheckCollisions()
+}
+
+// CheckBounds makes sure the ball isn't out of bounds, and if it is, reacts
+// Checks X and Y axis
+func (g *Game) CheckBounds() {
 	if g.Ball.X > g.ScreenWidth {
 		g.Score1++
 		g.Ball.DX = 0
@@ -92,17 +100,13 @@ func (g *Game) Update() {
 		g.Ball.Y = g.ScreenHeight / 2
 		g.Ball.Served = false
 
-		// setup Pod deletion
-		deletePolicy := metav1.DeletePropagationForeground
-		g.KubeClient.CoreV1().Pods(g.Player2.Pod.Namespace).Delete(g.Player2.Pod.Name, &metav1.DeleteOptions{
-			PropagationPolicy: &deletePolicy,
-		})
-
-		newPod, err := GetRandomPod("", "")
+		newPod, err := CyclePod(g.KubeClient, g.Player2.Pod)
 		if err != nil {
+			// TODO: maybe display this error in game
 			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player2.Pod = newPod
+		// TODO: SFX
 	}
 
 	if g.Ball.X < 0 {
@@ -113,25 +117,23 @@ func (g *Game) Update() {
 		g.Ball.Y = g.ScreenHeight / 2
 		g.Ball.Served = false
 
-		deletePolicy := metav1.DeletePropagationForeground
-		g.KubeClient.CoreV1().Pods(g.Player1.Pod.Namespace).Delete(g.Player1.Pod.Name, &metav1.DeleteOptions{
-			PropagationPolicy: &deletePolicy,
-		})
-
-		newPod, err := GetRandomPod("", "")
+		newPod, err := CyclePod(g.KubeClient, g.Player1.Pod)
 		if err != nil {
+			// TODO: maybe display this error in game
 			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player1.Pod = newPod
+		//TODO: SFX
 	}
 
 	if g.Ball.Y < 0 || g.Ball.Y > g.ScreenHeight {
+		// TODO: SFX
 		g.Ball.DY = -g.Ball.DY
 	}
+}
 
-	// TODO: The follow collision detection is buggy, and can result in the ball being "stuck" in the paddle
-	// Should probably fix this for playability
-
+// CheckCollisions is responsible for reacting to collisions
+func (g *Game) CheckCollisions() {
 	// if a ball collides with a paddle, reverse it's DX and keep it from colliding into the paddle
 	if rl.CheckCollisionRecs(GetPaddleCollisionRec(g.Player1.Paddle), GetBallCollisionRec(g.Ball)) {
 		g.Ball.DX = -g.Ball.DX
@@ -150,4 +152,5 @@ func (g *Game) Update() {
 			g.Ball.DY = -int32(rand.Intn(10))
 		}
 	}
+
 }
