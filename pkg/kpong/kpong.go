@@ -10,6 +10,8 @@ func Start(kubeconfig string, namespace string) {
 	screenHeight := int32(800)
 
 	rl.InitWindow(screenWidth, screenHeight, "kPong")
+	rl.InitAudioDevice()
+
 	rl.SetTargetFPS(60)
 
 	// startmsg := "Press space to serve"
@@ -78,6 +80,8 @@ func Start(kubeconfig string, namespace string) {
 		ScreenHeight:  screenHeight,
 		ScreenWidth:   screenWidth,
 	}
+	game.Init()
+	rl.PlaySound(game.SFX[3])
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()

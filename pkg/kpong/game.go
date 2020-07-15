@@ -18,6 +18,16 @@ type Game struct {
 	Score1, Score2            int
 	ScoreFontSize             int32
 	ScreenHeight, ScreenWidth int32
+	SFX                       map[int]rl.Sound
+}
+
+// Init loads in Game assets
+func (g *Game) Init() {
+	g.SFX = make(map[int]rl.Sound)
+	g.SFX[0] = rl.LoadSound("assets/sfx/collide.wav")
+	g.SFX[1] = rl.LoadSound("assets/sfx/lose.wav")
+	g.SFX[2] = rl.LoadSound("assets/sfx/bounce.wav")
+	g.SFX[3] = rl.LoadSound("assets/sfx/start.wav")
 }
 
 // Render draws the things to the screen
@@ -106,7 +116,7 @@ func (g *Game) CheckBounds() {
 			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player2.Pod = newPod
-		// TODO: SFX
+		rl.PlaySound(g.SFX[1])
 	}
 
 	if g.Ball.X < 0 {
@@ -123,11 +133,11 @@ func (g *Game) CheckBounds() {
 			fmt.Printf("Uhoh: %s", err)
 		}
 		g.Player1.Pod = newPod
-		//TODO: SFX
+		rl.PlaySound(g.SFX[1])
 	}
 
 	if g.Ball.Y < 0 || g.Ball.Y > g.ScreenHeight {
-		// TODO: SFX
+		rl.PlaySound(g.SFX[0])
 		g.Ball.DY = -g.Ball.DY
 	}
 }
@@ -136,6 +146,7 @@ func (g *Game) CheckBounds() {
 func (g *Game) CheckCollisions() {
 	// if a ball collides with a paddle, reverse it's DX and keep it from colliding into the paddle
 	if rl.CheckCollisionRecs(GetPaddleCollisionRec(g.Player1.Paddle), GetBallCollisionRec(g.Ball)) {
+		rl.PlaySound(g.SFX[0])
 		g.Ball.DX = -g.Ball.DX
 		if rand.Intn(2) == 1 {
 			g.Ball.DY = int32(rand.Intn(10))
@@ -145,6 +156,7 @@ func (g *Game) CheckCollisions() {
 	}
 
 	if rl.CheckCollisionRecs(GetPaddleCollisionRec(g.Player2.Paddle), GetBallCollisionRec(g.Ball)) {
+		rl.PlaySound(g.SFX[0])
 		g.Ball.DX = -g.Ball.DX
 		if rand.Intn(2) == 1 {
 			g.Ball.DY = int32(rand.Intn(10))
@@ -152,5 +164,4 @@ func (g *Game) CheckCollisions() {
 			g.Ball.DY = -int32(rand.Intn(10))
 		}
 	}
-
 }
