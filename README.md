@@ -2,7 +2,7 @@
 
 # kPong
 
-kPong is a chaos game for kubernetes. It uses your kubeconfig at its default path, at `$HOME/.kube/config`.
+kPong is a chaos game for kubernetes. It is pong, with high stakes. If you lose the round, you lose your pod.
 
 DO NOT PLAY THIS IN PRODUCTION.
 
@@ -54,7 +54,7 @@ Windows seems to be a tricky environment, at least for me. I am able to build an
 [mingw](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
 [golang]()
 
-For Mingw specifically, please see [this article}(https://medium.com/@martin.kunc/golang-compile-go-gl-example-on-windows-in-mingw-64-bfb6eb66a143) for better instructions for installation config.
+For Mingw specifically, please see [this article](https://medium.com/@martin.kunc/golang-compile-go-gl-example-on-windows-in-mingw-64-bfb6eb66a143) for better instructions for installation config.
 
 Once setup, you should be able to open a MinGW shell and run:
 ```
