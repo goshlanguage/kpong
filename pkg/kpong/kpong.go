@@ -18,16 +18,13 @@ func Start(kubeconfig string, namespace string) {
 
 	var kubeErr bool
 
-	clientset, err := newK8SClient(kubeconfig)
-	if err != nil {
-		kubeErr = true
-	}
+	k8s := newK8SClient(kubeconfig, namespace)
 
-	pod1, err := GetRandomPod(clientset, namespace)
+	pod1, err := k8s.GetRandomPod()
 	if err != nil {
 		kubeErr = true
 	}
-	pod2, err := GetRandomPod(clientset, namespace)
+	pod2, err := k8s.GetRandomPod()
 	if err != nil {
 		kubeErr = true
 	}
@@ -74,7 +71,7 @@ func Start(kubeconfig string, namespace string) {
 		Player2:       player2,
 		Controller1:   controller1,
 		Controller2:   controller2,
-		KubeClient:    clientset,
+		K8S:           k8s,
 		PodFontSize:   18,
 		ScoreFontSize: 36,
 		ScreenHeight:  screenHeight,

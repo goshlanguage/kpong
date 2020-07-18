@@ -13,11 +13,12 @@ See the [releases page](https://github.com/ryanhartje/kpong/releases) for stable
 The current release enables 2 players to play with 1 keyboard using these bindings:
 |Key|Description|
 |-|-|
+|escape|Exit the game|
 |space|Start the round|
-|w|Player 1 (left paddle) up|
-|s|Player 1 (right paddle) down|
-|↑|Player 2 (left paddle) up|
-|↓|Player 2 (right paddle) down|
+|w|Move player 1 (left paddle) up|
+|s|Move player 1 (right paddle) down|
+|↑|Move player 2 (left paddle) up|
+|↓|Move player 2 (right paddle) down|
 
 At the command line, the following flags are available for configuration:
 

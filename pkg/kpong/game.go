@@ -5,14 +5,13 @@ import (
 	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
-	"k8s.io/client-go/kubernetes"
 )
 
 // Game is the state store for the game of pong
 type Game struct {
 	Ball                      *Ball
 	Controller1, Controller2  *Controller
-	KubeClient                *kubernetes.Clientset
+	K8S                       *K8SClient
 	Player1, Player2          *Player
 	PodFontSize               int32
 	Score1, Score2            int
@@ -110,7 +109,7 @@ func (g *Game) CheckBounds() {
 		g.Ball.Y = g.ScreenHeight / 2
 		g.Ball.Served = false
 
-		newPod, err := CyclePod(g.KubeClient, g.Player2.Pod)
+		newPod, err := g.K8S.CyclePod(g.Player2.Pod)
 		if err != nil {
 			// TODO: maybe display this error in game
 			fmt.Printf("Uhoh: %s", err)
@@ -127,7 +126,7 @@ func (g *Game) CheckBounds() {
 		g.Ball.Y = g.ScreenHeight / 2
 		g.Ball.Served = false
 
-		newPod, err := CyclePod(g.KubeClient, g.Player1.Pod)
+		newPod, err := g.K8S.CyclePod(g.Player1.Pod)
 		if err != nil {
 			// TODO: maybe display this error in game
 			fmt.Printf("Uhoh: %s", err)
