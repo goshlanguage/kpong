@@ -24,11 +24,6 @@ func newRootCmd(args []string) (*cobra.Command, error) {
 		Short: "A high stakes game of pong",
 		Long:  `kpong is a kubernetes chaos game. Each player represents a pod. Lose and you lose your pod. Goodluck.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Check kubeconfig. If we don't pass it in from the command line, grab from env via Viper
-			if kubeconfig == "" && viper.GetString("kubeconfig") != "" {
-				kubeconfig = viper.GetString("kubeconfig")
-			}
-
 			kpong.Start(kubeconfig, namespace)
 		},
 	}
@@ -40,6 +35,8 @@ func newRootCmd(args []string) (*cobra.Command, error) {
 
 	viper.BindPFlag("kubeconfig", cmd.PersistentFlags().Lookup("kubeconfig"))
 	viper.BindEnv("kubeconfig", "KUBECONFIG")
+
+	kubeconfig = viper.GetString("kubeconfig")
 
 	return cmd, nil
 }
