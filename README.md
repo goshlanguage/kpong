@@ -1,4 +1,4 @@
-![kubernetes](https://raw.githubusercontent.com/ryanhartje/kpong/docs/images/kpong.png)
+![kubernetes](docs/images/kpong.png)
 
 # kPong
 
