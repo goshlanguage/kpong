@@ -14,7 +14,7 @@ jobs:
         run: sudo apt update && sudo apt install libgl1-mesa-dev and xorg-dev # install GLFW dependencies (https://github.com/go-gl/glfw)
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          go build -t kpong-${{ github.ref}}-linux cmd/kpong/kpong.go
+          go build -o kpong-${{ github.ref}}-linux cmd/kpong/kpong.go
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
