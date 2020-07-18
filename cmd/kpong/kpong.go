@@ -6,12 +6,17 @@ import (
 
 	"github.com/ryanhartje/kpong/pkg/kpong"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
 	kubeconfig string
 	namespace  string
 )
+
+func init() {
+	viper.AutomaticEnv()
+}
 
 func newRootCmd(args []string) (*cobra.Command, error) {
 	cmd := &cobra.Command{
@@ -25,9 +30,13 @@ func newRootCmd(args []string) (*cobra.Command, error) {
 
 	cmd.PersistentFlags().StringVar(&kubeconfig, "kubeconfig", "", "Path to the kubeconfig you'd like to use")
 	cmd.PersistentFlags().StringVar(&namespace, "namespace", "", "The namespace you want to play out of. Leave blank for all namespaces. ex: kube-system")
-
 	flags := cmd.PersistentFlags()
 	flags.Parse(args)
+
+	viper.BindPFlag("kubeconfig", cmd.PersistentFlags().Lookup("kubeconfig"))
+	viper.BindEnv("kubeconfig", "KUBECONFIG")
+
+	kubeconfig = viper.GetString("kubeconfig")
 
 	return cmd, nil
 }
