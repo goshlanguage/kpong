@@ -1,4 +1,4 @@
-name: Upload all artifacts to release
+name: Build and publish artifacts
 
 on:
   release:

@@ -1,5 +1,5 @@
+name: Test kPong
 on: [push, pull_request]
-name: Test
 jobs:
   test:
     strategy:
