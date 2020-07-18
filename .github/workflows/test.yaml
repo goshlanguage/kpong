@@ -30,6 +30,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Install dependencies for ubuntu
-      run: sudo apt update && sudo apt install libx11-dev libxcursor-dev libxrandr-dev
+      run: sudo apt update && sudo apt install libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev # install GLFW dependencies
     - name: Test
       run: go test -v ./...
