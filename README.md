@@ -1,39 +1,63 @@
-![kubernetes](https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.svg)
+![kubernetes](https://raw.githubusercontent.com/ryanhartje/kpong/docs/images/kpong.png)
 
 # kPong
 
 kPong is a chaos game for kubernetes. It uses your kubeconfig at its default path, at `$HOME/.kube/config`.
 
-DO NOT PLAY THIS IN PRODUCTION (unless you're a bad ass or your services are resiliant AF).
+DO NOT PLAY THIS IN PRODUCTION.
 
-## Installing
+## Downloading
 
-Tenatively, we'll place a binary on the [releases page](https://github.com/ryanhartje/kpong/releases)
+See the [releases page](https://github.com/ryanhartje/kpong/releases) for stable versions.
 
-By default, you'll have a single player game vs AI. Here are some flags that will alter your experience:
+The current release enables 2 players to play with 1 keyboard using these bindings:
+|Key|Description|
+|-|-|
+|space|Start the round|
+|w|Player 1 (left paddle) up|
+|s|Player 1 (right paddle) down|
+|↑|Player 2 (left paddle) up|
+|↓|Player 2 (right paddle) down|
+
+At the command line, the following flags are available for configuration:
 
 |Flag|Description|
 |-|-|
 |--kubeconfig|Specify location for kubeconfig|
 |--namespace|Specify the namespace you want to select from, or leave empty for all namespaces|
 
-
-## Building
-
-Your platform is likely supported, but I wrote this on a Mac. If there's interest, I'll gladly expand install instructions to support your platform, please file an issue.
+## Development
 
 ### MacOS
 
-You will need xcode, which you can install by running:
+You will need xcode before you can use CGO, then get the repo and build:
 ```
 xcode-select --install
+go get github.com/ryanhartje/kpong
+cd ~/go/src/github.com/ryanhartje/kpong
+go build cmd/kpong/kpong.go
 ```
 
-Then, clone and fetch dependencies:
+###Linux
+
+After installing golang, run:
 ```
 go get github.com/ryanhartje/kpong
 cd ~/go/src/github.com/ryanhartje/kpong
-go mod download
+go build cmd/kpong/kpong.go
 ```
 
+### Windows
 
+Windows seems to be a tricky environment, at least for me. I am able to build and run this project within mingw and golang's windows distribution. You can find these here:
+[mingw](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+[golang]()
+
+For Mingw specifically, please see [this article}(https://medium.com/@martin.kunc/golang-compile-go-gl-example-on-windows-in-mingw-64-bfb6eb66a143) for better instructions for installation config.
+
+Once setup, you should be able to open a MinGW shell and run:
+```
+go get github.com/ryanhartje/kpong
+cd $HOME/go/src/github.com/ryanhartje/
+go build cmd/kpong/kpong.go
+```
