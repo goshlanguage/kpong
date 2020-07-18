@@ -20,10 +20,10 @@ jobs:
         run: sudo apt update && sudo apt install libgl1-mesa-dev and xorg-dev # install GLFW dependencies (https://github.com/go-gl/glfw)
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          go build -o kpong-${{ steps.get_version.outputs.TAG }}-linux cmd/kpong/kpong.go
+          go build -o kpong-${{ steps.get_version.outputs.VERSION }}-linux cmd/kpong/kpong.go
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -31,8 +31,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./kpong-${{ steps.get_version.outputs.TAG }}-linux
-          asset_name: kpong-${{ github.ref}}-linux
+          asset_path: ./kpong-${{ steps.get_version.outputs.VERSION }}-linux
+          asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-linux
           asset_content_type: application/octet-stream
 
   macos_build:
@@ -43,10 +43,22 @@ jobs:
         uses: actions/checkout@v2
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          go build -o kpong-${{ steps.get_version.outputs.TAG }}-darwin cmd/kpong/kpong.go
+          go build -o kpong-${{ steps.get_version.outputs.VERSION }}-darwin cmd/kpong/kpong.go
+            - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./kpong-${{ steps.get_version.outputs.VERSION }}-darwin
+          asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-darwin
+          asset_content_type: application/octet-stream
+
+
 
   windows_build:
     name: Build and Release Windows
@@ -56,10 +68,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        shell: bash
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          go build -o kpong-${{ steps.get_version.outputs.TAG }}-windows cmd/kpong/kpong.go
+          go build -o kpong-${{ steps.get_version.outputs.VERSION }}-windows cmd/kpong/kpong.go
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -67,6 +80,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./kpong-${{ steps.get_version.outputs.TAG }}-windows
-          asset_name: kpong-${{ github.ref}}-windows
+          asset_path: ./kpong-${{ steps.get_version.outputs.VERSION }}-windows
+          asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-windows
           asset_content_type: application/octet-stream
