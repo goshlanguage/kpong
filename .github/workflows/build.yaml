@@ -1,6 +1,13 @@
 name: Build and publish artifacts
 
-on: release
+on:
+  release:
+    types:
+    - published
+    - created
+    - edited
+    - prereleased
+    - released
 
 jobs:
   ubuntu_build:
