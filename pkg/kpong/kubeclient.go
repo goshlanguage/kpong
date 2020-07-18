@@ -70,6 +70,15 @@ func (k8s *K8SClient) GetRandomPod() (*v1.Pod, error) {
 		return &v1.Pod{}, err
 	}
 
+	if len(pods.Items) == 0 {
+		return &v1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "no-pods-found",
+					Namespace: "",
+				},
+			},
+			nil
+	}
 	die := rand.Intn(len(pods.Items))
 	randoPod := &pods.Items[die]
 	return randoPod, nil

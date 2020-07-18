@@ -7,11 +7,6 @@ import (
 	"k8s.io/client-go/kubernetes/fake"
 )
 
-func TestNewK8SClient(t *testing.T) {
-	k8s := newK8SClient("", "")
-	assert.NotEqual(t, k8s.Failed, true, "Failed to creating k8s client")
-}
-
 func TestGetRandomPod(t *testing.T) {
 	clientset := fake.NewSimpleClientset()
 	k8s := K8SClient{
