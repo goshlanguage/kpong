@@ -39,7 +39,7 @@ cd ~/go/src/github.com/ryanhartje/kpong
 go build cmd/kpong/kpong.go
 ```
 
-###Linux
+### Linux
 
 After installing golang, run:
 ```
