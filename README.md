@@ -2,6 +2,8 @@
 
 # kPong
 
+![Test kPong](https://github.com/ryanhartje/kpong/workflows/Test%20kPong/badge.svg)
+
 kPong is a chaos game for kubernetes. It is pong, with high stakes. If you lose the round, you lose your pod.
 
 DO NOT PLAY THIS IN PRODUCTION.
