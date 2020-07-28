@@ -56,8 +56,8 @@ jobs:
           asset_content_type: application/octet-stream
 
   windows_build:
-   name: Build and Release Windows
-   runs-on: windows-latest
+    name: Build and Release Windows
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -101,7 +101,7 @@ jobs:
     # Setup MSBuild.exe path if required
     - uses: warrenbuckley/Setup-MSBuild@v1
       if: matrix.compiler == 'msvc16'
-   
+  
     - name: Build MinGW Project
       run: |
         cd ../raylib/src
