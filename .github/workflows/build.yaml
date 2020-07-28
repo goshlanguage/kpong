@@ -55,28 +55,83 @@ jobs:
           asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-darwin
           asset_content_type: application/octet-stream
 
-
-
   windows_build:
-    name: Build and Release Windows
-    runs-on: windows-latest
+   name: Build and Release Windows
+   runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        compiler: [mingw, msvc16]
+        bits: [32, 64]
+        include:
+        - compiler: mingw
+          bits: 32
+          CFLAGS: -m32
+          GENERATOR: "MinGW Makefiles"
+        - compiler: mingw
+          bits: 64
+          CFLAGS: -m64
+          GENERATOR: "MinGW Makefiles"
+        - compiler: msvc16
+          bits: 32
+          GENERATOR: "Visual Studio 16 2019"
+          ARCH: "-A Win32"  
+        - compiler: msvc16
+          bits: 64
+          GENERATOR: "Visual Studio 16 2019"
+          ARCH: "-A x64" 
+          
+    env:
+      CFLAGS: ${{ matrix.CFLAGS }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-      - name: Build project # This would actually build your project, using zip for an example artifact
-        run: |
-          go build -o kpong-${{ steps.get_version.outputs.VERSION }}-windows cmd/kpong/kpong.go
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./kpong-${{ steps.get_version.outputs.VERSION }}-windows
-          asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-windows
-          asset_content_type: application/octet-stream
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Setup Environment
+      run: | 
+        mkdir build
+        cd build
+        
+    # Trying to solve an issue with CMake and Chocolatey for MinGW
+    - run: cmake -E remove c:\ProgramData\chocolatey\bin\cpack.exe
+      if: matrix.compiler == 'mingw'
+
+    # Setup MSBuild.exe path if required
+    - uses: warrenbuckley/Setup-MSBuild@v1
+      if: matrix.compiler == 'msvc16'
+   
+    - name: Build MinGW Project
+      run: |
+        cd ../raylib/src
+        make PLATFORM=PLATFORM_DESKTOP CC=gcc
+      if: matrix.compiler == 'mingw'
+
+    - name: Setup CMake Project
+      run: cmake -G "${{ matrix.GENERATOR }}" ${{ matrix.ARCH }} -DCMAKE_SH="CMAKE_SH-NOTFOUND" -DSTATIC=ON -DSHARED=ON -DBUILD_EXAMPLES=ON -DBUILD_GAMES=OFF -DINCLUDE_EVERYTHING=ON ../raylib
+      if: matrix.compiler == 'msvc16'
+      
+    - name: Build raylib Source & Examples
+      run: cmake --build . --target install
+      if: matrix.compiler == 'msvc16'
+
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      shell: bash
+      
+    - name: Build project # This would actually build your project, using zip for an example artifact
+      run: |
+        go build -o kpong-${{ steps.get_version.outputs.VERSION }}-windows cmd/kpong/kpong.go
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./kpong-${{ steps.get_version.outputs.VERSION }}-windows
+        asset_name: kpong-${{ steps.get_version.outputs.VERSION }}-windows
+        asset_content_type: application/octet-stream
