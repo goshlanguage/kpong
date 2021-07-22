@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ryanhartje/kpong/pkg/kpong"
+	"github.com/goshlanguage/kpong/pkg/kpong"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
