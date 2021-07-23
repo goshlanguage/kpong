@@ -16,7 +16,7 @@ The current release enables 2 players to play with 1 keyboard using these bindin
 |Key|Description|
 |-|-|
 |escape|Exit the game|
-|space|Start the round|
+|space|Serve the ball (start round)|
 |w|Move player 1 (left paddle) up|
 |s|Move player 1 (right paddle) down|
 |↑|Move player 2 (left paddle) up|
@@ -24,8 +24,10 @@ The current release enables 2 players to play with 1 keyboard using these bindin
 
 At the command line, the following flags are available for configuration:
 
-|Flag|Description|
+|Flag|Default|Description|
 |-|-|
+|--host|127.0.0.1:27017|Specify location for kubeconfig|
+|--hostIP||Specify location for kubeconfig|
 |--kubeconfig|Specify location for kubeconfig|
 |--namespace|Specify the namespace you want to select from, or leave empty for all namespaces|
 

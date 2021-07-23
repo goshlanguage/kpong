@@ -5,20 +5,10 @@ import (
 )
 
 // Start initiates the main game loop
-func Start(kubeconfig string, namespace string) {
-	screenWidth := int32(1024)
-	screenHeight := int32(800)
-
-	rl.InitWindow(screenWidth, screenHeight, "kPong")
-	rl.InitAudioDevice()
-
-	rl.SetTargetFPS(60)
-
-	// startmsg := "Press space to serve"
-
+func Start(conf GameConfig) {
 	var kubeErr bool
 
-	k8s := newK8SClient(kubeconfig, namespace)
+	k8s := newK8SClient(conf.Kubeconfig, conf.Namespace)
 
 	pod1, err := k8s.GetRandomPod()
 	if err != nil {
@@ -30,19 +20,19 @@ func Start(kubeconfig string, namespace string) {
 	}
 
 	player1 := &Player{
-		Paddle: &Paddle{rl.RayWhite, screenHeight, 10, 10, 10, 75},
+		Paddle: &Paddle{rl.RayWhite, conf.ScreenHeight, 10, 10, 10, 75},
 		Pod:    pod1,
 	}
 	player2 := &Player{
-		Paddle: &Paddle{rl.RayWhite, screenHeight, screenWidth - 20, screenHeight - 70, 10, 75},
+		Paddle: &Paddle{rl.RayWhite, conf.ScreenHeight, conf.ScreenWidth - 20, conf.ScreenHeight - 70, 10, 75},
 		Pod:    pod2,
 	}
 	ball := &Ball{
 		rl.RayWhite,
 		0,
 		0,
-		screenWidth / 2,
-		screenHeight / 2,
+		conf.ScreenWidth / 2,
+		conf.ScreenHeight / 2,
 		10,
 		10,
 		false,
@@ -74,8 +64,8 @@ func Start(kubeconfig string, namespace string) {
 		K8S:           k8s,
 		PodFontSize:   18,
 		ScoreFontSize: 36,
-		ScreenHeight:  screenHeight,
-		ScreenWidth:   screenWidth,
+		ScreenHeight:  conf.ScreenHeight,
+		ScreenWidth:   conf.ScreenWidth,
 	}
 	game.Init()
 	rl.PlaySound(game.SFX[3])

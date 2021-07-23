@@ -20,6 +20,16 @@ type Game struct {
 	SFX                       map[int]rl.Sound
 }
 
+//GameConfig allows parameters of the game to be easily configured
+type GameConfig struct {
+	Host                      bool
+	HostIP                    string
+	Kubeconfig                string
+	Namespace                 string
+	Port                      string
+	ScreenHeight, ScreenWidth int32
+}
+
 // Init loads in Game assets
 func (g *Game) Init() {
 	g.SFX = make(map[int]rl.Sound)
