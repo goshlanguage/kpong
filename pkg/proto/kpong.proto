@@ -1,0 +1,15 @@
+message MoveRequest {
+  int x = 1;
+  int y = 2;
+}
+
+message NewHostPosition {
+  int x = 1;
+  int y = 2;
+  int ballx = 3;
+  int bally = 4;
+}
+
+service MovePaddle {
+  rpc MakeMove (MoveRequest) returns (NewHostPosition) {}
+}

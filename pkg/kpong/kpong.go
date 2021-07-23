@@ -57,6 +57,7 @@ func Start(conf GameConfig) {
 
 	game := Game{
 		Ball:          ball,
+		Conf:          conf,
 		Player1:       player1,
 		Player2:       player2,
 		Controller1:   controller1,

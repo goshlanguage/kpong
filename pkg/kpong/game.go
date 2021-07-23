@@ -10,6 +10,7 @@ import (
 // Game is the state store for the game of pong
 type Game struct {
 	Ball                      *Ball
+	Conf                      GameConfig
 	Controller1, Controller2  *Controller
 	K8S                       *K8SClient
 	Player1, Player2          *Player
@@ -22,6 +23,7 @@ type Game struct {
 
 //GameConfig allows parameters of the game to be easily configured
 type GameConfig struct {
+	ConnString                string
 	Host                      bool
 	HostIP                    string
 	Kubeconfig                string
@@ -92,6 +94,23 @@ func (g *Game) Render() {
 	g.Ball.Render()
 	g.Player1.Render()
 	g.Player2.Render()
+
+	// If the game isn't in play, display the host string so the user can share
+	// TODO: have this check for if the user is hosting a match, and only  display when no other user has joined
+	if g.Ball.DX == 0 {
+		if g.Conf.ConnString != "" {
+			listenMsg := fmt.Sprintf("Listening on: %s", g.Conf.ConnString)
+			msgSize := rl.MeasureText(listenMsg, 24)
+
+			rl.DrawText(
+				listenMsg,
+				(g.ScreenWidth/2)-(msgSize/2),
+				g.ScreenHeight-(g.ScreenHeight/5),
+				24,
+				rl.RayWhite,
+			)
+		}
+	}
 
 }
 
