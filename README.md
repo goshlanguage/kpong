@@ -2,7 +2,7 @@
 
 # kPong
 
-![Test kPong](https://github.com/ryanhartje/kpong/workflows/Test%20kPong/badge.svg)
+![Test kPong](https://github.com/goshlanguage/kpong/workflows/Test%20kPong/badge.svg)
 
 kPong is a chaos game for kubernetes. It is pong, with high stakes. If you lose the round, you lose your pod.
 
@@ -10,7 +10,7 @@ DO NOT PLAY THIS IN PRODUCTION.
 
 ## Downloading
 
-See the [releases page](https://github.com/ryanhartje/kpong/releases) for stable versions.
+See the [releases page](https://github.com/goshlanguage/kpong/releases) for stable versions.
 
 The current release enables 2 players to play with 1 keyboard using these bindings:
 |Key|Description|
@@ -38,8 +38,8 @@ At the command line, the following flags are available for configuration:
 You will need xcode before you can use CGO, then get the repo and build:
 ```
 xcode-select --install
-go get github.com/ryanhartje/kpong
-cd ~/go/src/github.com/ryanhartje/kpong
+go get github.com/goshlanguage/kpong
+cd ~/go/src/github.com/goshlanguage/kpong
 go build cmd/kpong/kpong.go
 ```
 
@@ -47,8 +47,8 @@ go build cmd/kpong/kpong.go
 
 After installing golang, run:
 ```
-go get github.com/ryanhartje/kpong
-cd ~/go/src/github.com/ryanhartje/kpong
+go get github.com/goshlanguage/kpong
+cd ~/go/src/github.com/goshlanguage/kpong
 go build cmd/kpong/kpong.go
 ```
 
@@ -62,7 +62,7 @@ For Mingw specifically, please see [this article](https://medium.com/@martin.kun
 
 Once setup, you should be able to open a MinGW shell and run:
 ```
-go get github.com/ryanhartje/kpong
-cd $HOME/go/src/github.com/ryanhartje/
+go get github.com/goshlanguage/kpong
+cd $HOME/go/src/github.com/goshlanguage/
 go build cmd/kpong/kpong.go
 ```
