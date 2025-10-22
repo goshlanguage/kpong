@@ -9,9 +9,8 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0
-	github.com/stretchr/testify v1.6.1
-	golang.org/x/sys v0.0.0-20220817070843-5a390386f1f2 // indirect
-	google.golang.org/grpc v1.27.1
+	github.com/stretchr/testify v1.8.3
+	google.golang.org/grpc v1.56.3
 	k8s.io/api v0.20.0
 	k8s.io/apimachinery v0.20.0
 	k8s.io/client-go v0.20.0
